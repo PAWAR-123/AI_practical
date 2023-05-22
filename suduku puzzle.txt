@@ -1,0 +1,80 @@
+import random
+
+def create_board():
+    """Create a new Sudoku board with a random solution."""
+    board = [[0] * 9 for _ in range(9)]
+    for i in range(9):
+        for j in range(9):
+            board[i][j] = random.randint(1, 9)
+    return board
+
+def print_board(board):
+    """Print a Sudoku board in a human-readable format."""
+    for i in range(9):
+        if i % 3 == 0 and i != 0:
+            print("- - - - - - - - - - - -")
+        for j in range(9):
+            if j % 3 == 0 and j != 0:
+                print("| ", end="")
+            print(board[i][j], end=" ")
+        print()
+
+def get_row(board, row):
+    """Get a specific row from a Sudoku board."""
+    return board[row]
+
+def get_column(board, column):
+    """Get a specific column from a Sudoku board."""
+    return [board[i][column] for i in range(9)]
+
+def get_box(board, row, column):
+    """Get a specific 3x3 box from a Sudoku board."""
+    box_row = (row // 3) * 3
+    box_column = (column // 3) * 3
+    return [board[i][j] for i in range(box_row, box_row + 3) for j in range(box_column, box_column + 3)]
+
+def is_valid(board, row, column, value):
+    """Check if a given value can be placed in a specific cell of a Sudoku board."""
+    if value in get_row(board, row):
+        return False
+    if value in get_column(board, column):
+        return False
+    if value in get_box(board, row, column):
+        return False
+    return True
+
+def solve(board):
+    """Solve a Sudoku board using backtracking."""
+    for row in range(9):
+        for column in range(9):
+            if board[row][column] == 0:
+                for value in range(1, 10):
+                    if is_valid(board, row, column, value):
+                        board[row][column] = value
+                        if solve(board):
+                            return True
+                        board[row][column] = 0
+                return False
+    return True
+
+def generate_puzzle(board, difficulty):
+    """Generate a Sudoku puzzle by removing cells from the solution."""
+    puzzle = [row[:] for row in board]
+    cells = [(row, column) for row in range(9) for column in range(9)]
+    random.shuffle(cells)
+    for row, column in cells:
+        value = puzzle[row][column]
+        puzzle[row][column] = 0
+        temp = [row[:] for row in puzzle]
+        if not solve(temp):
+            puzzle[row][column] = value
+        if len([(r, c) for r in range(9) for c in range(9) if puzzle[r][c] != 0]) <= difficulty:
+            return puzzle
+
+# Example usage
+board = create_board()
+print("Solution:")
+print_board(board)
+print("Puzzle (easy):")
+puzzle = generate_puzzle(board, 40)
+print_board(puzzle)

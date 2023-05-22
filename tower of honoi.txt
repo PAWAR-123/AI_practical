@@ -1,0 +1,56 @@
+.# Creating a recursive function  
+2. def tower_of_hanoi(disks, source, auxiliary, target) 
+3.    if(disks == 1):  
+4.        print('Move disk 1 from rod {} to rod {}.'.format(source, target))  
+5.        return  
+6.    # function call itself  
+7. tower_of_hanoi(disks - 1, source, target, auxiliary)  
+8. print('Move disk {} from rod {} to rod {}.'.format(disks, source, target))  
+9. tower_of_hanoi(disks - 1, auxiliary, source, target)  
+ 
+12.disks = int(input('Enter the number of disks: '))  
+13.# We are referring source as A, auxiliary as B, and target as C  
+14.tower_of_hanoi(disks, 'A', 'B', 'C')  # Calling the function  
+
+
+
+
+
+
+A = [3, 2, 1]
+B = []
+C = []
+
+def move(n, source, target, auxiliary):
+    if n > 0:
+        # Move n - 1 disks from source to auxiliary, so they are out of the way
+        move(n - 1, source, auxiliary, target)
+
+        # Move the nth disk from source to target
+        target.append(source.pop())
+
+        # Display our progress
+        print(A, B, C, '##############', sep='\n')
+
+        # Move the n - 1 disks that we left on auxiliary onto target
+        move(n - 1, auxiliary, target, source)
+
+# Initiate call from source A to target C with auxiliary B
+move(3, A, C, B)
+
+
+
+
+
+
+def tower__of__hanoi(number, start, aux, end):  
+    if (number == 1):  
+        print ('Moved disk 1 from rod {} to rod {}'.format (start, end))  
+        return
+    tower__of__hanoi(number - 1, start, end, aux)  
+    print ('Moved disk {} from rod {} to rod {}'.format (number, start, end))  
+    tower__of__hanoi(number - 1, aux, start, end)  
+
+
+number = 3
+tower__of__hanoi (number, 'A', 'B', 'C')
